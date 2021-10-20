@@ -1,1 +1,2 @@
-# Restaurante-de-Sushi
+# Restaurante-de-sushi
+Sistema de administracion
