@@ -9,7 +9,7 @@ using static BL.Sushi.FoodMenuBL;
 
 namespace BL.Sushi
 {
-    class Contexto : DbContext
+    public class Contexto : DbContext
     {
 
 
@@ -21,9 +21,22 @@ namespace BL.Sushi
          protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            Database.SetInitializer(new DatosdeInicio());//Agrega Datos de inicio a la base de datos despues de eliminar
         }
 
 
-        public DbSet<foodmenu> FoodMenu { get; set; }
+        public DbSet<FoodMenu> foodmenu { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Tipo> Tipos { get; set; }
+        public DbSet<Usuarios> Usuarios { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
+        public object ChangeTracker { get; internal set; }
+        public object Facturas { get; internal set; }
+        public object Productos { get; internal set; }
+
+        internal void SaveChanges()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
