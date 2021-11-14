@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,21 @@ namespace BL.Sushi
             }
         }
 
+        public void CalcularFactura(Factura factura)
+        {
+            if (factura != null)
+            {
+                double subtotal = 0;
+
+              
+
+                factura.Subtotal = subtotal;
+                factura.Impuesto = subtotal * 0.15;
+                factura.Total = subtotal + factura.Impuesto;
+            }
+        }
+
+
         public void CancelarCambios()
         {
             foreach (var item in _contexto.ChangeTracker.Entries())
@@ -67,31 +83,21 @@ namespace BL.Sushi
             {
                 return resultado;
             }
-
             CalcularExistencia(factura);
+
+          
 
             _contexto.SaveChanges();
             resultado.Exitoso = true;
             return resultado;
         }
 
+
+
+
         private void CalcularExistencia(Factura factura)
         {
-            foreach (var detalle in factura.FacturaDetalle)
-            {
-                var producto = _contexto.Productos.Find(detalle.ProductoId);
-                if (producto != null)
-                {
-                    if (factura.Activo == true)
-                    {
-                        producto.Existencia = producto.Existencia - detalle.Cantidad;
-                    }
-                    else
-                    {
-                        producto.Existencia = producto.Existencia + detalle.Cantidad;
-                    }
-                }
-            }
+            throw new NotImplementedException();
         }
 
         private Resultado Validar(Factura factura)
@@ -133,7 +139,7 @@ namespace BL.Sushi
 
             foreach (var detalle in factura.FacturaDetalle)
             {
-                if (detalle.ProductoId == 0)
+                if (detalle.FoodMenuId == 0)
                 {
                     resultado.Mensaje = "Seleccione productos validos";
                     resultado.Exitoso = false;
@@ -144,29 +150,6 @@ namespace BL.Sushi
             return resultado;
         }
 
-        public void CalcularFactura(Factura factura)
-        {
-            if (factura != null)
-            {
-                double subtotal = 0;
-
-                foreach (var detalle in factura.FacturaDetalle)
-                {
-                    var producto = _contexto.Productos.Find(detalle.ProductoId);
-                    if (producto != null)
-                    {
-                        detalle.Precio = producto.Precio;
-                        detalle.Total = detalle.Cantidad * producto.Precio;
-
-                        subtotal += detalle.Total;
-                    }
-                }
-
-                factura.Subtotal = subtotal;
-                factura.Impuesto = subtotal * 0.15;
-                factura.Total = subtotal + factura.Impuesto;
-            }
-        }
 
         public bool AnularFactura(int id)
         {
@@ -209,8 +192,8 @@ namespace BL.Sushi
     public class FacturaDetalle
     {
         public int Id { get; set; }
-        public int ProductoId { get; set; }
-        public Producto Producto { get; set; }
+        public int FoodMenuId { get; set; }
+        public FoodMenu FoodMenu { get; set; }
         public int Cantidad { get; set; }
         public double Precio { get; set; }
         public double Total { get; set; }
