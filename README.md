@@ -1,2 +1,2 @@
 # Restaurante-de-sushi
-Sistema de administracion
+Proyecto de la clase L3 
